@@ -63,7 +63,7 @@ class Runner:
             if step.until is not None:
                 try:
                     done = self._evaluate_check(step.until, ctx, value, step.id, kind="until")
-                except Exception as exc:
+                except Exception as exc:  # checker failures are workflow failures
                     out.error = f"until check failed: {exc}"
                     return out
                 if done:
@@ -118,6 +118,8 @@ class Runner:
                 run_original = True
                 continue
 
+            # TAKE_OVER runs the agent implementation in place of the original code.
+            # If validation still fails, ask recovery again without silently rerunning code.
             run_original = False
             try:
                 last_value = self._take_over(policy, step, ctx, last_value, last_error)
