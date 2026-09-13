@@ -1,0 +1,6 @@
+name: yaml-demo
+steps:
+  - id: increment
+    run: increment
+    check: positive
+    repeat: 3
